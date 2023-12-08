@@ -17,7 +17,7 @@
         <form id="articleForm">
             <div class="form-group">
                 <label for="id">ID :</label>
-                <input type="text" class="form-control" id="articleId" name="articleId" value="" required>
+                <input type="text" class="form-control" id="id" name="id" value="" required>
             </div>
             <div class="form-group">
                 <label for="photo">Photo (Image URL):</label>
@@ -92,23 +92,25 @@
             window.saveArticle = function() {
                 var formData = $('#articleForm').serialize();
                 console.log(formData);
-                var articleId = $('#articleId').val();
-                console.log(articleId);
+                var id = $('#id').val();
+                console.log(id);
 
-                var url = articleId ? '<?php echo site_url('article/update') ?>' : '<?php echo site_url('article/add') ?>'
+                var url = id ? '<?php echo site_url('article/update/') ?>' : '<?php echo site_url('article/add') ?>'
 
-                if (articleId) {
-                    formData += '&id=' + articleId;
+                if (id) {
+                    formData += '&id=' + id;
                 }
+
+                console.log(formData);
 
                 $.ajax({
                     type: 'POST',
-                    url: url,
+                    url: '<?php echo site_url('article/update/'); ?>',
                     data: formData,
                     success: function() {
                         dataTable.ajax.reload();
                         $('#articleForm')[0].reset();
-                        $('#articleId').val('');
+                        $('#id').val('');
                     }
                 });
             };
@@ -133,7 +135,7 @@
                     success: function(data) {
                         var article = JSON.parse(data);
                         console.log(article);
-                        $('#articleId').val(article.id);
+                        $('#id').val(article.id);
                         $('#photo').val(article.photo);
                         $('#title').val(article.title);
                         $('#content').val(article.content);

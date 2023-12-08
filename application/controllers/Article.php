@@ -66,8 +66,7 @@ class Article extends CI_Controller
     public function update() {
         try {
             $data = $this->input->post();
-    
-            // Ensure 'id' is present in the data array
+            
             if (!isset($data['id'])) {
                 throw new Exception("Missing 'id' in the data array.");
             }
