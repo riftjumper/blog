@@ -32,10 +32,14 @@ class Article_model extends CI_Model
         $this->db->delete('article');
     }
 
-    public function update_article($data){
+    public function update_article($data)
+    {
         $this->db->where('id', $data['id']);
+        unset($data['id']);  // Remove 'id' from $data to avoid updating it
         $this->db->update('article', $data);
     }
+
+
 
 
 }

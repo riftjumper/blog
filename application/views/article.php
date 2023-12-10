@@ -15,7 +15,7 @@
 
         <!-- Article Form -->
         <form id="articleForm">
-            <div class="form-group">
+            <div class="form-group" hidden>
                 <label for="id">ID :</label>
                 <input type="text" class="form-control" id="id" name="id" value="" required>
             </div>
@@ -56,7 +56,7 @@
     <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap4.min.js"></script>
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             // Initialize DataTable
             var dataTable = $('#articleTable').DataTable({
                 "ajax": {
@@ -64,15 +64,16 @@
                     "type": "POST",
                     "dataSrc": ""
                 },
-                "columns": [{
+                "columns": [
+                    {
                         "data": "photo",
-                        "render": function(data, type, row) {
+                        "render": function (data, type, row) {
                             return '<img src="' + data + '" alt="Article Image" style="max-width: 100px; max-height: 100px;">';
                         }
                     },
                     {
                         "data": "title",
-                        "render": function(data, type, row) {
+                        "render": function (data, type, row) {
                             return '<a href="<?php echo site_url('article/view/') ?>' + row.id + '">' + data + '</a>';
                         }
                     },
@@ -81,67 +82,47 @@
                     },
                     {
                         "data": null,
-                        "render": function(data, type, row) {
-                            return '<button type="button" class="btn btn-warning btn-sm" onclick="editArticle(\'' + row.id + '\')">Edit</button> ' +
-                                '<button type="button" class="btn btn-danger btn-sm" onclick="deleteArticle(\'' + row.id + '\')">Delete</button>';
+                        "render": function (data, type, row) {
+                            return '<a href="<?php echo site_url('article/edit/') ?>' + row.id + '" class="btn btn-warning btn-sm">Edit</a>' +
+                                '<button type="button" class="btn btn-danger btn-sm" onclick="deleteArticle(' + row.id + ')">Delete</button>';
                         }
                     }
                 ]
             });
 
-            window.saveArticle = function() {
+
+            // Function to save a new article
+            window.saveArticle = function () {
                 var formData = $('#articleForm').serialize();
-                console.log(formData);
-                var id = $('#id').val();
-                console.log(id);
-
-                var url = id ? '<?php echo site_url('article/update/') ?>' : '<?php echo site_url('article/add') ?>'
-
-                if (id) {
-                    formData += '&id=' + id;
-                }
-
-                console.log(formData);
 
                 $.ajax({
                     type: 'POST',
-                    url: '<?php echo site_url('article/update/'); ?>',
+                    url: '<?php echo site_url('article/add') ?>',
                     data: formData,
-                    success: function() {
-                        dataTable.ajax.reload();
+                    success: function (data) {
+                        var newArticle = JSON.parse(data);
+
+                        // Add the new row to the DataTable
+                        dataTable.row.add(newArticle).draw(false);
+
+                        // Reset the form
                         $('#articleForm')[0].reset();
-                        $('#id').val('');
+                    },
+                    error: function (error) {
+                        console.error('Error saving article:', error);
                     }
                 });
             };
 
-            window.deleteArticle = function(id) {
+            window.deleteArticle = function (id) {
                 $.ajax({
                     type: 'POST',
                     url: '<?php echo site_url('article/delete/'); ?>' + id,
-                    success: function() {
+                    success: function () {
                         dataTable.ajax.reload();
                     },
-                    error: function(error) {
+                    error: function (error) {
                         console.error('Error deleting article:', error);
-                    }
-                })
-            }
-
-            window.editArticle = function(id) {
-                $.ajax({
-                    type: 'POST',
-                    url: '<?php echo site_url(('article/edit/')) ?>' + id,
-                    success: function(data) {
-                        var article = JSON.parse(data);
-                        console.log(article);
-                        $('#id').val(article.id);
-                        $('#photo').val(article.photo);
-                        $('#title').val(article.title);
-                        $('#content').val(article.content);
-                    },
-                    error: function(error) {
-                        console.error('Error retrieving data:', errror);
                     }
                 })
             }

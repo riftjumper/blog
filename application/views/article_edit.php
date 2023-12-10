@@ -3,32 +3,41 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Article Dashboard</title>
+    <title>Edit Article</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap4.min.css">
 </head>
 
-<body>
+<body class="bg-light">
 
     <div class="container mt-5">
-        <h2>Article Dashboard</h2>
+        <h2>Edit Article</h2>
 
         <!-- Article Form -->
-        <form id="articleForm">
+        <form id="editArticleForm" action="<?php echo site_url('article/update/') . $article->id; ?>" method="post">
+            <input type="hidden" id="editId" name="id" value="<?php echo $article->id; ?>">
             <div class="form-group">
-                <label for="photo">Photo (Image URL):</label>
-                <input type="text" class="form-control" id="photo" name="photo" value="" required>
+                <label for="editPhoto">Photo (Image URL):</label>
+                <input type="text" class="form-control" id="editPhoto" name="photo"
+                    value="<?php echo $article->photo; ?>" required>
             </div>
             <div class="form-group">
-                <label for="title">Title:</label>
-                <input type="text" class="form-control" id="title" name="title" required>
+                <label for="editTitle">Title:</label>
+                <input type="text" class="form-control" id="editTitle" name="title"
+                    value="<?php echo $article->title; ?>" required>
             </div>
             <div class="form-group">
-                <label for="content">Content:</label>
-                <textarea class="form-control" id="content" name="content" rows="4" required></textarea>
+                <label for="editContent">Content:</label>
+                <textarea class="form-control" id="editContent" name="content" rows="4"
+                    required><?php echo $article->content; ?></textarea>
             </div>
-            <button type="button" class="btn btn-primary" onclick="saveArticle()">Save Article</button>
+            <button type="submit" class="btn btn-primary">Update Article</button>
         </form>
+
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 </body>
+
+</html>

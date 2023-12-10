@@ -10,6 +10,7 @@ class Article extends CI_Controller
             redirect('auth/login');
         }
         $this->config->set_item('csrf_protection', false);
+        $this->load->model('Article_model');
     }
     public function index()
     {
@@ -25,6 +26,7 @@ class Article extends CI_Controller
         header('Content-Type: application/json');
         echo json_encode($articles);
     }
+
 
     public function view($id)
     {
@@ -63,33 +65,45 @@ class Article extends CI_Controller
         echo json_encode(array('status' => 'success'));
     }
 
-    public function update() {
-        try {
-            $data = $this->input->post();
-            
-            if (!isset($data['id'])) {
-                throw new Exception("Missing 'id' in the data array.");
-            }
-    
-            $this->load->model('ArticleModel');
-            $this->ArticleModel->update_article($data);
-            echo json_encode(['status' => 'success']);
-        } catch (Exception $e) {
-            echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
-        }
-    }
-    
+    public function update($id)
+    {
+        $data = array(
+            'photo' => $this->input->post('photo'),
+            'title' => $this->input->post('title'),
+            'content' => $this->input->post('content')
+        );
 
-    public function edit($id) {
+        // Add 'id' to $data
+        $data['id'] = $id;
+
+        $this->load->model('Article_model');
+        $this->Article_model->update_article($data);
+
+        // Optionally, you can redirect to a success page
+        redirect('article');
+    }
+
+
+
+
+    public function edit($id)
+    {
         $this->load->model('Article_model');
         $article = $this->Article_model->get_article($id);
-    
-        if ($article) {
-            echo json_encode($article);
-        } else {
-            echo json_encode(['error' => 'Article not found']);
-        }
+
+        header('Content-Type: application/json');
+        echo json_encode($article);
     }
-    
+
+    public function edit_view($id)
+    {
+        $this->load->model('Article_model');
+        $article = $this->Article_model->get_article($id);
+
+        $data['article'] = $article;
+        $this->load->view('article_edit', $data);
+    }
+
+
 
 }
