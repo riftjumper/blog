@@ -25,6 +25,14 @@ class Auth extends CI_Controller {
             return redirect("article");
         } else{
             $this->session->set_flashdata("message_login_error","Login gagal pastikan username dan password benar");
+            // echo '<div class="alert alert-danger" role="alert">',
+            $this->session->flashdata('message_login_error');
+            // ,'</div>';
+
+            // if ($message) {
+            //     # code...
+            //     echo $message;
+            // }
         }
 
         $this->load->view("login_form");
@@ -33,6 +41,7 @@ class Auth extends CI_Controller {
     public function logout() {
         $this->load->model('auth_model');
         $this->auth_model->logout();
-        redirect(site_url());
+        $this->session->sess_destroy();
+        redirect(site_url('auth/login'));
     }
 }

@@ -40,9 +40,31 @@ class Article extends CI_Controller
         }
     }
 
+    public function upload()
+    {
+        $this->load->model('Article_model');
+        $data['current_user'] = $this->auth_model->current_user();
+
+        if ($this->input->method() === 'post') {
+            $file_name = str_replace('.', '', $data['id']);
+            $config['upload_path']          = FCPATH . '/upload/avatar/';
+            $config['allowed_types']        = 'gif|jpg|jpeg|png';
+            $config['file_name']            = $file_name;
+            $config['overwrite']            = true;
+            $config['max_size']             = 1024; // 1MB
+            $config['max_width']            = 1080;
+            $config['max_height']           = 1080;
+
+            $this->load->library('upload', $config);
+
+            // baru sampai sini liat di https://www.petanikode.com/codeigniter-upload/
+
+        }
+    }
     public function add()
     {
         $this->load->model('Article_model');
+
         $data = array(
             'photo' => $this->input->post('photo'),
             'title' => $this->input->post('title'),
@@ -52,7 +74,6 @@ class Article extends CI_Controller
         unset($data['id']);
 
         $this->Article_model->insert_article($data);
-
         echo json_encode(array('status' => 'success'));
     }
 
@@ -67,19 +88,18 @@ class Article extends CI_Controller
 
     public function update($id)
     {
+
         $data = array(
             'photo' => $this->input->post('photo'),
             'title' => $this->input->post('title'),
             'content' => $this->input->post('content')
         );
 
-        // Add 'id' to $data
         $data['id'] = $id;
 
         $this->load->model('Article_model');
         $this->Article_model->update_article($data);
 
-        // Optionally, you can redirect to a success page
         redirect('article');
     }
 
@@ -103,7 +123,4 @@ class Article extends CI_Controller
         $data['article'] = $article;
         $this->load->view('article_edit', $data);
     }
-
-
-
 }

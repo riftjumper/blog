@@ -31,7 +31,9 @@
                     required><?php echo $article->content; ?></textarea>
             </div>
             <button type="submit" class="btn btn-primary">Update Article</button>
+            <a class="btn btn-danger" href="<?php echo site_url('article') ?>" role="button">Cancel</a>
         </form>
+
 
     </div>
 

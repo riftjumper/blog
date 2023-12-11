@@ -4,20 +4,20 @@ class Auth_model extends CI_Model {
     private $_table = "user";
     const SESSION_KEY = "user_id";
 
-    public function rules(){
-        return[
-            [
-            'field' => 'username',
-            'label' => 'Username or email',
-            'rules' => 'requiered'
-        ],
-        [
-            'field' => 'password',
-            'label'=> 'password',
-            'rules' => 'requiered|max_length[255]'
-            ]
-        ];
-    }
+    // public function rules(){
+    //     return[
+    //         [
+    //         'field' => 'username',
+    //         'label' => 'Username or email',
+    //         'rules' => 'requiered'
+    //     ],
+    //     [
+    //         'field' => 'password',
+    //         'label'=> 'password',
+    //         'rules' => 'requiered|max_length[255]'
+    //         ]
+    //     ];
+    // }
 
     public function login($username, $password){
         $this->db->where('email', $username)->or_where('username',$username);

@@ -8,6 +8,26 @@ class Article_model extends CI_Model
         $this->load->database();
     }
 
+    public function rules(){
+        return[
+            [
+				'field' => 'photo', 
+				'label' => 'photo', 
+				'rules' => 'required'
+			],
+            [
+				'field' => 'title', 
+				'label' => 'title', 
+				'rules' => 'required'
+			],
+            [
+				'field' => 'content', 
+				'label' => 'content', 
+				'rules' => 'required'
+			],
+        ];
+    }
+
     public function get_articles()
     {
         $query = $this->db->get('article');

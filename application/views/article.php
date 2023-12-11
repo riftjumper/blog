@@ -11,17 +11,21 @@
 <body>
 
     <div class="container mt-5">
+        <a href="<?php echo site_url('auth/logout') ?>">logout</a>
         <h2>Article Dashboard</h2>
-
         <!-- Article Form -->
         <form id="articleForm">
             <div class="form-group" hidden>
                 <label for="id">ID :</label>
                 <input type="text" class="form-control" id="id" name="id" value="" required>
             </div>
-            <div class="form-group">
+            <!-- <div class="form-group">
                 <label for="photo">Photo (Image URL):</label>
                 <input type="text" class="form-control" id="photo" name="photo" value="" required>
+            </div> -->
+            <div class="custom-file">
+                <input type="file" class="custom-file-input" id="customFile">
+                <label class="custom-file-label" for="customFile">Choose file</label>
             </div>
             <div class="form-group">
                 <label for="title">Title:</label>
@@ -56,7 +60,7 @@
     <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap4.min.js"></script>
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             // Initialize DataTable
             var dataTable = $('#articleTable').DataTable({
                 "ajax": {
@@ -64,16 +68,15 @@
                     "type": "POST",
                     "dataSrc": ""
                 },
-                "columns": [
-                    {
+                "columns": [{
                         "data": "photo",
-                        "render": function (data, type, row) {
+                        "render": function(data, type, row) {
                             return '<img src="' + data + '" alt="Article Image" style="max-width: 100px; max-height: 100px;">';
                         }
                     },
                     {
                         "data": "title",
-                        "render": function (data, type, row) {
+                        "render": function(data, type, row) {
                             return '<a href="<?php echo site_url('article/view/') ?>' + row.id + '">' + data + '</a>';
                         }
                     },
@@ -82,7 +85,7 @@
                     },
                     {
                         "data": null,
-                        "render": function (data, type, row) {
+                        "render": function(data, type, row) {
                             return '<a href="<?php echo site_url('article/edit/') ?>' + row.id + '" class="btn btn-warning btn-sm">Edit</a>' +
                                 '<button type="button" class="btn btn-danger btn-sm" onclick="deleteArticle(' + row.id + ')">Delete</button>';
                         }
@@ -92,14 +95,14 @@
 
 
             // Function to save a new article
-            window.saveArticle = function () {
+            window.saveArticle = function() {
                 var formData = $('#articleForm').serialize();
 
                 $.ajax({
                     type: 'POST',
                     url: '<?php echo site_url('article/add') ?>',
                     data: formData,
-                    success: function (data) {
+                    success: function(data) {
                         var newArticle = JSON.parse(data);
 
                         // Add the new row to the DataTable
@@ -108,20 +111,20 @@
                         // Reset the form
                         $('#articleForm')[0].reset();
                     },
-                    error: function (error) {
+                    error: function(error) {
                         console.error('Error saving article:', error);
                     }
                 });
             };
 
-            window.deleteArticle = function (id) {
+            window.deleteArticle = function(id) {
                 $.ajax({
                     type: 'POST',
                     url: '<?php echo site_url('article/delete/'); ?>' + id,
-                    success: function () {
+                    success: function() {
                         dataTable.ajax.reload();
                     },
-                    error: function (error) {
+                    error: function(error) {
                         console.error('Error deleting article:', error);
                     }
                 })
